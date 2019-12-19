@@ -1,1 +1,1 @@
-metamap_api
+Metamap api for nodejs
