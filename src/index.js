@@ -13,7 +13,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 import {PORT} from "./config"
-
+import {MM_EMAIL,MM_USERNAME,MM_PASSWORD} from "./config"
 
 var cors = require('cors');
 
@@ -21,18 +21,6 @@ app.use(cors());
 
 // use it before all route definitions
 app.use(cors("*"));
-
-// app.use(express.static(__dirname + '/domainParserviews'));
-// //Store all HTML files in view folder.
-// app.use(express.static(__dirname + '/views'));
-// //Store all JS and CSS in Scripts folder.
-// app.use(express.static(__dirname + '/dist'));
-//
-// app.use(express.static(__dirname + '/images'));
-
-// app.engine('html', require('ejs').renderFile);
-// app.set('view engine', 'html');
-
 
 function sleep(ms){
     return new Promise(resolve=>{
@@ -47,38 +35,38 @@ Object.defineProperty(Array.prototype, 'flat', {
       }, []);
     }
 });
-
-function extractMMData (r) {
-  try{
-    r = JSON.parse(r)
-    r = r.AllDocuments[0].Document.Utterances.map(
-                    utterances => utterances.Phrases.map(
-                      phrases => phrases.Mappings.map(
-                        mappings => mappings.MappingCandidates.map(
-                          candidate => ({
-                                    CUI:candidate.CandidateCUI,
-                                    matchedText: candidate.CandidateMatched,
-                                    preferred: candidate.CandidatePreferred,
-                                    hasMSH: candidate.Sources.indexOf("MSH") > -1
-                                 })
-                               )
-                             )
-                           )
-                         ).flat().flat().flat()
-
-    // This removes duplicate cuis
-    r = r.reduce( (acc,el) => {if ( acc.cuis.indexOf(el.CUI) < 0 ){acc.cuis.push(el.CUI); acc.data.push(el)}; return acc }, {cuis: [], data: []} ).data
-    return r
-  } catch (e){
-    return []
-  }
-}
+//
+// function extractMMData (r) {
+//   try{
+//     r = JSON.parse(r)
+//     r = r.AllDocuments[0].Document.Utterances.map(
+//                     utterances => utterances.Phrases.map(
+//                       phrases => phrases.Mappings.map(
+//                         mappings => mappings.MappingCandidates.map(
+//                           candidate => ({
+//                                     CUI:candidate.CandidateCUI,
+//                                     matchedText: candidate.CandidateMatched,
+//                                     preferred: candidate.CandidatePreferred,
+//                                     hasMSH: candidate.Sources.indexOf("MSH") > -1
+//                                  })
+//                                )
+//                              )
+//                            )
+//                          ).flat().flat().flat()
+//
+//     // This removes duplicate cuis
+//     r = r.reduce( (acc,el) => {if ( acc.cuis.indexOf(el.CUI) < 0 ){acc.cuis.push(el.CUI); acc.data.push(el)}; return acc }, {cuis: [], data: []} ).data
+//     return r
+//   } catch (e){
+//     return []
+//   }
+// }
 async function main(){
 }
 
 main();
 
-app.get('/api/deleteTable', async function(req,res){
+app.get('/echo', async function(req,res){
   //
   // if ( req.query && req.query.docid && req.query.page ){
   //
@@ -99,7 +87,7 @@ app.get('/api/deleteTable', async function(req,res){
   // } else {
   //   res.send("table not deleted")
   // }
-
+  res.send("echo!")
 });
 
 app.listen(PORT, function () {

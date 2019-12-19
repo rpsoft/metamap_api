@@ -10,3 +10,4 @@ export const PORT = 9876;
 
 export const MM_USERNAME = "";
 export const MM_PASSWORD = "";
+export const MM_EMAIL = "";
